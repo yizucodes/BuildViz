@@ -5,7 +5,7 @@ import { LoadingState } from './components/LoadingState';
 import { InterpretationSelection } from './components/InterpretationSelection';
 import { estimateConstructionCosts } from './services/claudeService';
 import { generateArchitecturalRender, generateInterpretationImages } from './services/fluxService';
-import { interpretVision } from './services/nemotronService';
+import { interpretVision, analyzePermitConsiderations } from './services/nemotronService';
 import type { BuildingSpecs, GenerationResult, Interpretation } from './types';
 
 type AppView = 'form' | 'loading' | 'interpretation-selection' | 'final-result';
@@ -38,13 +38,14 @@ function App() {
       // Normal flow: generate 1 image + costs
       setIsInterpretationMode(false);
       setLoadingMessage('Generating BuildViz...');
-      setLoadingSubtext('This usually takes 30-60 seconds');
+      setLoadingSubtext('Creating render, analyzing costs, and checking permits...');
       setLoadingProgress(undefined);
 
       try {
-        const [costs, imageUrl] = await Promise.all([
+        const [costs, imageUrl, permitConsiderations] = await Promise.all([
           estimateConstructionCosts(specs),
           generateArchitecturalRender(specs),
+          analyzePermitConsiderations(specs),
         ]);
 
         setResult({
@@ -52,6 +53,7 @@ function App() {
           costs,
           specs,
           timestamp: new Date(),
+          permitConsiderations,
         });
         setCurrentView('final-result');
       } catch (err) {
@@ -115,12 +117,15 @@ function App() {
     }
 
     setCurrentView('loading');
-    setLoadingMessage('Calculating construction costs...');
-    setLoadingSubtext(`Analyzing ${interpretations[index].title}`);
+    setLoadingMessage('Finalizing your design...');
+    setLoadingSubtext(`Analyzing costs and permits for ${interpretations[index].title}`);
     setLoadingProgress(undefined);
 
     try {
-      const costs = await estimateConstructionCosts(currentSpecs);
+      const [costs, permitConsiderations] = await Promise.all([
+        estimateConstructionCosts(currentSpecs),
+        analyzePermitConsiderations(currentSpecs),
+      ]);
 
       setResult({
         imageUrl: interpretationImages[index]!,
@@ -128,6 +133,7 @@ function App() {
         specs: currentSpecs,
         timestamp: new Date(),
         interpretation: interpretations[index],
+        permitConsiderations,
       });
       setCurrentView('final-result');
     } catch (err) {
@@ -139,6 +145,7 @@ function App() {
         specs: currentSpecs,
         timestamp: new Date(),
         interpretation: interpretations[index],
+        permitConsiderations: null,
       });
       setCurrentView('final-result');
     }

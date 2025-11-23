@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import type { GenerationResult } from '../types';
+import { PermitConsiderations } from './PermitConsiderations';
 
 interface ResultDisplayProps {
   result: GenerationResult;
@@ -123,6 +124,14 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset, o
           )}
         </div>
       </div>
+
+      {/* Permit Considerations - Full Width Below */}
+      {result.permitConsiderations && result.permitConsiderations.length > 0 && (
+        <PermitConsiderations
+          permitData={result.permitConsiderations}
+          buildingSpecs={result.specs}
+        />
+      )}
 
       {/* Actions */}
       <div className="flex justify-center gap-4 mt-8">

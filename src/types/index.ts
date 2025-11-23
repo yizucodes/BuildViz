@@ -31,10 +31,18 @@ export interface Interpretation {
   aesthetic: string;
 }
 
+export interface PermitConsideration {
+  'Issue category': string;
+  'Typical requirement': string;
+  'Potential risk level': 'Low' | 'Medium' | 'High';
+  'Common resolution approach': string;
+}
+
 export interface GenerationResult {
   imageUrl: string;
   costs: CostBreakdown | null;
   specs: BuildingSpecs;
   timestamp: Date;
   interpretation?: Interpretation;
+  permitConsiderations?: PermitConsideration[] | null;
 }
