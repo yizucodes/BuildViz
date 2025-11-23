@@ -1,10 +1,14 @@
+export type BuildingType = 'office' | 'warehouse' | 'residential' | 'retail' | 'hotel';
+export type StylePreference = 'modern-glass' | 'traditional-brick' | 'industrial' | 'brutalist' | 'futuristic';
+export type MaterialQuality = 'basic' | 'standard' | 'premium';
+
 export interface BuildingSpecs {
-  buildingType: 'office' | 'warehouse' | 'residential' | 'retail';
+  buildingType: BuildingType;
   stories: number;
   squareFootage: number;
   location: string;
-  materialQuality: 'basic' | 'standard' | 'premium';
-  stylePreference: 'modern-glass' | 'traditional-brick' | 'industrial';
+  materialQuality: MaterialQuality;
+  stylePreference: StylePreference;
 }
 
 export interface CostBreakdown {
@@ -25,6 +29,3 @@ export interface GenerationResult {
   specs: BuildingSpecs;
   timestamp: Date;
 }
-
-
-

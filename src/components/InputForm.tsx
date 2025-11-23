@@ -42,6 +42,7 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
           <option value="warehouse">Warehouse / Industrial</option>
           <option value="residential">Multi-Family Residential</option>
           <option value="retail">Retail / Commercial</option>
+          <option value="hotel">Hotel / Hospitality</option>
         </select>
       </div>
 
@@ -111,6 +112,8 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
           <option value="modern-glass">Modern Glass & Steel</option>
           <option value="traditional-brick">Traditional Brick</option>
           <option value="industrial">Industrial / Warehouse</option>
+          <option value="brutalist">Brutalist</option>
+          <option value="futuristic">Futuristic</option>
         </select>
       </div>
 
