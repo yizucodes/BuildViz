@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "env": {
+    "VITE_ANTHROPIC_API_KEY": "@anthropic-api-key",
+    "VITE_FAL_KEY": "@fal-api-key"
+  }
+}
+
+
+
