@@ -13,6 +13,10 @@ BuildViz generates photorealistic architectural visualizations combined with det
 - 📊 **Professional Output**: Publication-ready results with detailed breakdowns
 - ⚡ **Fast & Simple**: Intuitive interface, no architectural expertise required
 
+## 📹 [Watch the demo video](https://www.youtube.com/watch?v=F0rx_DTFUo8)
+
+<img width="2374" height="1526" alt="image" src="https://github.com/user-attachments/assets/f48363d1-403a-4481-a6e6-928a973d1dca" />
+
 ## Tech Stack
 
 - **Frontend**: React 18 + TypeScript, Vite, Tailwind CSS
