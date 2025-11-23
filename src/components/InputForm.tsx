@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { BuildingSpecs } from '../types';
+import { Logo } from './Logo';
 
 interface InputFormProps {
   onSubmit: (specs: BuildingSpecs) => void;
@@ -25,7 +26,10 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">BuildViz</h1>
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <Logo size="medium" showText={false} />
+          <h1 className="text-4xl font-bold text-gray-900">BuildViz</h1>
+        </div>
         <p className="text-gray-600">Architectural visualization + cost estimation in 60 seconds</p>
       </div>
 

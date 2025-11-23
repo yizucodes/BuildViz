@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Interpretation } from '../types';
+import { Logo } from './Logo';
 
 interface InterpretationSelectionProps {
   visionDescription: string;
@@ -18,9 +19,12 @@ export const InterpretationSelection: React.FC<InterpretationSelectionProps> = (
     <div className="max-w-7xl mx-auto p-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Which interpretation matches your vision?
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <Logo size="medium" showText={false} />
+          <h1 className="text-4xl font-bold text-gray-900">
+            Which interpretation matches your vision?
+          </h1>
+        </div>
         <div className="max-w-3xl mx-auto bg-gray-50 p-4 rounded-lg border border-gray-200">
           <p className="text-gray-700 italic">"{visionDescription}"</p>
         </div>

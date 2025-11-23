@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import type { GenerationResult } from '../types';
 import { PermitConsiderations } from './PermitConsiderations';
+import { Logo } from './Logo';
 
 interface ResultDisplayProps {
   result: GenerationResult;
@@ -30,7 +31,10 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset, o
     <div className="max-w-7xl mx-auto p-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">BuildViz Result</h1>
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <Logo size="medium" showText={false} />
+          <h1 className="text-4xl font-bold text-gray-900">BuildViz Result</h1>
+        </div>
         <p className="text-gray-600">Professional architectural visualization + cost breakdown</p>
       </div>
 
