@@ -59,7 +59,7 @@ VITE_NVIDIA_API_KEY=your_nvidia_key_here  # Optional
 
 **Getting API Keys:**
 - **Anthropic**: Sign up at https://console.anthropic.com/
-- **FAL.ai**: Sign up at https://fal.ai/ (Use coupon code: `lovefluxfal` for $100 credits)
+- **FAL.ai**: Sign up at https://fal.ai/
 - **NVIDIA**: Sign up at https://build.nvidia.com/
 
 4. Run the development server:
