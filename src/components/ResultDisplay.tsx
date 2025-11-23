@@ -33,106 +33,78 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset })
       </div>
 
       {/* Main Content */}
-      <div ref={resultRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8 bg-white rounded-lg shadow-xl p-8">
+      <div ref={resultRef} className="flex flex-col lg:flex-row gap-8 bg-white rounded-lg shadow-xl p-8">
         
-        {/* Left: Rendering (2/3 width) */}
-        <div className="lg:col-span-2">
+        {/* Left: Rendering (70% width) */}
+        <div className="lg:w-[70%]">
           <img
             src={result.imageUrl}
             alt="Architectural rendering"
             className="w-full rounded-lg shadow-lg"
           />
           
-          {/* Project Details */}
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-2">Project Specifications</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-600">Type:</span>{' '}
-                <span className="font-medium capitalize">{result.specs.buildingType}</span>
-              </div>
-              <div>
-                <span className="text-gray-600">Stories:</span>{' '}
-                <span className="font-medium">{result.specs.stories}</span>
-              </div>
-              <div>
-                <span className="text-gray-600">Size:</span>{' '}
-                <span className="font-medium">{result.specs.squareFootage.toLocaleString()} sq ft</span>
-              </div>
-              <div>
-                <span className="text-gray-600">Location:</span>{' '}
-                <span className="font-medium">{result.specs.location}</span>
-              </div>
-              <div>
-                <span className="text-gray-600">Style:</span>{' '}
-                <span className="font-medium capitalize">{result.specs.stylePreference.replace('-', ' ')}</span>
-              </div>
-              <div>
-                <span className="text-gray-600">Quality:</span>{' '}
-                <span className="font-medium capitalize">{result.specs.materialQuality}</span>
-              </div>
-            </div>
+          {/* Project Details - Small text below image */}
+          <div className="mt-4">
+            <p className="text-sm text-gray-600 text-center">
+              {result.specs.stories} {result.specs.stories === 1 ? 'story' : 'stories'}, {result.specs.squareFootage.toLocaleString()} sq ft, {result.specs.location}, {result.specs.stylePreference.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            </p>
           </div>
         </div>
 
-        {/* Right: Cost Breakdown (1/3 width) */}
-        <div className="space-y-6">
+        {/* Right: Cost Breakdown (30% width) */}
+        <div className="lg:w-[30%] space-y-6">
           {result.costs ? (
             <>
               <div className="bg-blue-600 text-white p-6 rounded-lg">
-                <h3 className="text-lg font-semibold mb-2">Total Project Cost</h3>
+                <h3 className="text-sm font-semibold mb-3 tracking-wide">TOTAL PROJECT COST</h3>
                 <p className="text-4xl font-bold">{formatCurrency(result.costs.total)}</p>
-                <p className="text-blue-100 mt-2">
+                <p className="text-blue-100 mt-3 text-sm">
                   {formatCurrency(result.costs.costPerSqFt)}/sq ft
                 </p>
-                <p className="text-blue-100 mt-2 text-sm">
+                <p className="text-blue-100 mt-1 text-sm">
                   Timeline: {result.costs.timeline}
                 </p>
               </div>
 
-              <div className="space-y-3">
-                <h3 className="font-semibold text-gray-900 mb-4">Cost Breakdown</h3>
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-sm font-bold text-gray-900 mb-4 tracking-wide">BREAKDOWN</h3>
                 
-                <CostItem
-                  label="Foundation & Site Work"
-                  amount={result.costs.foundation}
-                  percentage={(result.costs.foundation / result.costs.total) * 100}
-                />
-                
-                <CostItem
-                  label="Structural System"
-                  amount={result.costs.structure}
-                  percentage={(result.costs.structure / result.costs.total) * 100}
-                />
-                
-                <CostItem
-                  label="Building Envelope"
-                  amount={result.costs.envelope}
-                  percentage={(result.costs.envelope / result.costs.total) * 100}
-                />
-                
-                <CostItem
-                  label="MEP Systems"
-                  amount={result.costs.mep}
-                  percentage={(result.costs.mep / result.costs.total) * 100}
-                />
-                
-                <CostItem
-                  label="Interior Finishes"
-                  amount={result.costs.interiors}
-                  percentage={(result.costs.interiors / result.costs.total) * 100}
-                />
-                
-                <CostItem
-                  label="Contingency (10%)"
-                  amount={result.costs.contingency}
-                  percentage={(result.costs.contingency / result.costs.total) * 100}
-                />
+                <div className="space-y-3">
+                  <CostItem
+                    label="Foundation"
+                    amount={result.costs.foundation}
+                  />
+                  
+                  <CostItem
+                    label="Structure"
+                    amount={result.costs.structure}
+                  />
+                  
+                  <CostItem
+                    label="Envelope"
+                    amount={result.costs.envelope}
+                  />
+                  
+                  <CostItem
+                    label="MEP"
+                    amount={result.costs.mep}
+                  />
+                  
+                  <CostItem
+                    label="Interiors"
+                    amount={result.costs.interiors}
+                  />
+                  
+                  <CostItem
+                    label="Contingency"
+                    amount={result.costs.contingency}
+                  />
+                </div>
               </div>
 
-              <div className="pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500 mb-4">
-                  *This is a preliminary estimate for feasibility analysis. Actual construction costs may vary by 20-40% based on market conditions, site conditions, and final design specifications.
+              <div className="pt-2">
+                <p className="text-xs text-gray-500">
+                  *Preliminary estimate. Actual costs may vary ±30%
                 </p>
               </div>
             </>
@@ -156,7 +128,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset })
           onClick={onReset}
           className="bg-gray-600 text-white py-3 px-8 rounded-md font-semibold hover:bg-gray-700 transition-colors"
         >
-          New Project
+          Generate Another
         </button>
       </div>
     </div>
@@ -164,10 +136,9 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset })
 };
 
 // Helper component for cost items
-const CostItem: React.FC<{ label: string; amount: number; percentage: number }> = ({
+const CostItem: React.FC<{ label: string; amount: number }> = ({
   label,
   amount,
-  percentage,
 }) => {
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('en-US', {
@@ -178,13 +149,20 @@ const CostItem: React.FC<{ label: string; amount: number; percentage: number }> 
     }).format(amount);
   };
 
+  // Format to show abbreviated numbers (e.g., $2.9M, $850K)
+  const formatAbbreviated = (amount: number): string => {
+    if (amount >= 1000000) {
+      return `$${(amount / 1000000).toFixed(1)}M`;
+    } else if (amount >= 1000) {
+      return `$${(amount / 1000).toFixed(0)}K`;
+    }
+    return formatCurrency(amount);
+  };
+
   return (
-    <div className="flex justify-between items-center py-2 border-b border-gray-100">
-      <div>
-        <p className="text-sm font-medium text-gray-900">{label}</p>
-        <p className="text-xs text-gray-500">{percentage.toFixed(1)}% of total</p>
-      </div>
-      <p className="text-sm font-semibold text-gray-900">{formatCurrency(amount)}</p>
+    <div className="flex justify-between items-center py-2">
+      <p className="text-sm text-gray-700">{label}:</p>
+      <p className="text-sm font-semibold text-gray-900">{formatAbbreviated(amount)}</p>
     </div>
   );
 };

@@ -3,13 +3,14 @@ import type { BuildingSpecs, CostBreakdown } from '../types';
 
 const anthropic = new Anthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
+  dangerouslyAllowBrowser: true,
 });
 
 export async function estimateConstructionCosts(
   specs: BuildingSpecs
 ): Promise<CostBreakdown> {
   
-  const prompt = `You are a construction cost estimator. Provide a detailed cost breakdown for the following building project.
+  const prompt = `You are a construction cost estimator. Calculate construction costs for the following building project using the baseline rates and multipliers provided.
 
 Building Specifications:
 - Type: ${specs.buildingType}
@@ -19,24 +20,35 @@ Building Specifications:
 - Material Quality: ${specs.materialQuality}
 - Style: ${specs.stylePreference}
 
-Provide itemized construction cost estimates in JSON format with these categories:
-- foundation (site work, excavation, foundation)
-- structure (steel/concrete frame, columns, floors)
-- envelope (exterior walls, windows, curtain wall)
-- mep (mechanical, electrical, plumbing, HVAC)
-- interiors (drywall, flooring, finishes, fixtures)
-- contingency (10% of subtotal)
-- total (sum of all above)
-- costPerSqFt (total divided by square footage)
-- timeline (estimated construction duration in months)
+BASELINE RATES (per square foot):
+- Foundation: $17
+- Structure: $58
+- Envelope: $36
+- MEP (Mechanical, Electrical, Plumbing): $30
+- Interiors: $24
 
-Consider:
-1. Regional cost multipliers (San Francisco 1.4x, NYC 1.3x, Texas 0.8x, etc.)
-2. Material quality impacts (premium adds 25%, basic reduces 15%)
-3. Current 2024 construction cost trends
-4. Realistic market rates
+LOCATION MULTIPLIERS:
+- San Francisco: 1.4x
+- New York City: 1.3x
+- Los Angeles: 1.2x
+- Austin: 0.85x
+- Miami: 1.0x
 
-Return ONLY valid JSON, no other text. Use this exact format:
+QUALITY MULTIPLIERS:
+- Basic: 0.85x
+- Standard: 1.0x
+- Premium: 1.25x
+
+INSTRUCTIONS:
+1. For each category (foundation, structure, envelope, mep, interiors):
+   - Multiply baseline rate × square footage × location multiplier × quality multiplier
+2. Calculate subtotal (sum of all five categories)
+3. Add 10% contingency (10% of subtotal)
+4. Calculate total (subtotal + contingency)
+5. Calculate costPerSqFt (total ÷ square footage)
+6. Estimate timeline based on stories: 1-3 stories = "8-12 months", 4-8 stories = "12-18 months", 9+ stories = "18-24 months"
+
+Return ONLY valid JSON with integer values (no decimals except costPerSqFt), no explanatory text. Use this exact format:
 {
   "foundation": 850000,
   "structure": 2900000,
@@ -45,7 +57,7 @@ Return ONLY valid JSON, no other text. Use this exact format:
   "interiors": 1200000,
   "contingency": 825000,
   "total": 9075000,
-  "costPerSqFt": 181.50,
+  "costPerSqFt": 181,
   "timeline": "14-18 months"
 }`;
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { InputForm } from './components/InputForm';
 import { ResultDisplay } from './components/ResultDisplay';
 import { LoadingState } from './components/LoadingState';
-// import { estimateConstructionCosts } from './services/claudeService';
+import { estimateConstructionCosts } from './services/claudeService';
 import { generateArchitecturalRender } from './services/fluxService';
 import type { BuildingSpecs, GenerationResult } from './types';
 
@@ -17,16 +17,14 @@ function App() {
 
     try {
       // Run both API calls in parallel for speed
-      // const [costs, imageUrl] = await Promise.all([
-      //   estimateConstructionCosts(specs),
-      //   generateArchitecturalRender(specs),
-      // ]);
-      
-      const imageUrl = await generateArchitecturalRender(specs);
+      const [costs, imageUrl] = await Promise.all([
+        estimateConstructionCosts(specs),
+        generateArchitecturalRender(specs),
+      ]);
 
       setResult({
         imageUrl,
-        costs: null, // Commented out: estimateConstructionCosts(specs)
+        costs,
         specs,
         timestamp: new Date(),
       });
