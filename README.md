@@ -2,12 +2,14 @@
 
 **Professional architectural renderings with itemized construction cost estimates in 60 seconds.**
 
-BuildViz is a web application that generates photorealistic architectural visualizations combined with detailed cost breakdowns. Simply input your building specifications, and get an instant professional rendering with accurate construction cost estimates.
+BuildViz generates photorealistic architectural visualizations combined with detailed cost breakdowns. Simply input your building specifications, and get instant professional renderings with accurate construction cost estimates.
 
 ## Features
 
 - 🏗️ **Instant Visualization**: Photorealistic architectural renderings in under 60 seconds
 - 💰 **Cost Estimation**: Itemized construction costs with regional adjustments
+- 🎨 **Design Interpretations**: Get 3 AI-generated design options from a text description
+- 🚦 **Permit Analysis**: AI-powered permit considerations based on location
 - 📊 **Professional Output**: Publication-ready results with detailed breakdowns
 - ⚡ **Fast & Simple**: Intuitive interface, no architectural expertise required
 
@@ -17,27 +19,27 @@ BuildViz is a web application that generates photorealistic architectural visual
 - **AI Services**: 
   - Anthropic Claude API (Sonnet 4.5) for cost estimation
   - FAL.ai FLUX for photorealistic rendering
+  - NVIDIA Nemotron for design interpretation
 - **Deployment**: Vercel
 
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
 - Node.js 18+ and npm
 - Anthropic API key
 - FAL.ai API key
+- NVIDIA API key (optional, for design interpretation feature)
 
 ### Installation
 
 1. Clone the repository:
-
 ```bash
 git clone <your-repo-url>
 cd buildviz
 ```
 
 2. Install dependencies:
-
 ```bash
 npm install
 ```
@@ -45,18 +47,18 @@ npm install
 3. Set up environment variables:
 
 Create a `.env` file in the root directory:
-
 ```bash
 VITE_ANTHROPIC_API_KEY=your_anthropic_key_here
 VITE_FAL_KEY=your_fal_key_here
+VITE_NVIDIA_API_KEY=your_nvidia_key_here  # Optional
 ```
 
 **Getting API Keys:**
 - **Anthropic**: Sign up at https://console.anthropic.com/
 - **FAL.ai**: Sign up at https://fal.ai/ (Use coupon code: `lovefluxfal` for $100 credits)
+- **NVIDIA**: Sign up at https://build.nvidia.com/
 
 4. Run the development server:
-
 ```bash
 npm run dev
 ```
@@ -64,6 +66,8 @@ npm run dev
 5. Open http://localhost:5173 in your browser
 
 ## Usage
+
+### Standard Flow
 
 1. **Input Building Specifications**:
    - Building type (office, warehouse, residential, retail)
@@ -78,35 +82,18 @@ npm run dev
 3. **Review Results**:
    - Professional architectural rendering
    - Itemized cost breakdown
+   - Permit considerations
    - Total project cost and timeline
 
-4. **Export**: Download or share your results
+### Design Interpretation Flow
 
-## Example Projects
+1. **Add Vision Description**: Optionally describe your vision (e.g., "Modern office that feels welcoming, not cold")
 
-### Office Building
-- Type: Office
-- Stories: 3
-- Size: 50,000 sq ft
-- Location: San Francisco, CA
-- Style: Modern Glass & Steel
-- Quality: Standard
+2. **Select from 3 Options**: AI generates 3 design interpretations with visualizations
 
-### Warehouse
-- Type: Warehouse
-- Stories: 1
-- Size: 100,000 sq ft
-- Location: Austin, TX
-- Style: Industrial
-- Quality: Basic
+3. **Choose Your Favorite**: Select the design that best matches your vision
 
-### Residential
-- Type: Multi-Family Residential
-- Stories: 5
-- Size: 75,000 sq ft
-- Location: Miami, FL
-- Style: Modern Glass & Steel
-- Quality: Premium
+4. **Get Full Analysis**: Receive cost estimates and permit considerations for your selected design
 
 ## Project Structure
 
@@ -114,22 +101,21 @@ npm run dev
 buildviz/
 ├── src/
 │   ├── components/
-│   │   ├── InputForm.tsx       # Building specification form
-│   │   ├── ResultDisplay.tsx   # Results with render + costs
-│   │   └── LoadingState.tsx    # Loading indicator
+│   │   ├── InputForm.tsx              # Building specification form
+│   │   ├── ResultDisplay.tsx          # Results with render + costs
+│   │   ├── LoadingState.tsx           # Loading indicator
+│   │   ├── InterpretationSelection.tsx # Design option selection
+│   │   └── PermitConsiderations.tsx   # Permit analysis display
 │   ├── services/
-│   │   ├── claudeService.ts    # Cost estimation API
-│   │   └── fluxService.ts      # Rendering API
+│   │   ├── claudeService.ts           # Cost estimation API
+│   │   ├── fluxService.ts             # Rendering API
+│   │   └── nemotronService.ts         # Design interpretation API
 │   ├── types/
-│   │   └── index.ts            # TypeScript interfaces
-│   ├── App.tsx                 # Main application component
-│   ├── main.tsx               # Entry point
-│   └── index.css              # Tailwind CSS
-├── .env                        # Environment variables (not in git)
-├── .env.example               # Example env file
+│   │   └── index.ts                   # TypeScript interfaces
+│   ├── App.tsx                        # Main application component
+│   └── main.tsx                       # Entry point
+├── server.js                          # Express server for CORS
 ├── package.json
-├── tailwind.config.js
-├── tsconfig.json
 └── vite.config.ts
 ```
 
@@ -145,48 +131,87 @@ buildviz/
    - Configure environment variables in Vercel dashboard:
      - `VITE_ANTHROPIC_API_KEY`
      - `VITE_FAL_KEY`
+     - `VITE_NVIDIA_API_KEY` (optional)
 
 3. Deploy!
 
 Vercel will automatically detect the Vite configuration and deploy your app.
 
-## Technical Details
+## Architecture Diagram
 
-### Cost Estimation
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              BuildViz Application                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐         │
+│  │   User Input    │    │   React App     │    │   Express       │         │
+│  │   (Browser)     │◄──►│   (Vite)        │◄──►│   Server        │         │
+│  │                 │    │                 │    │   (CORS Proxy)  │         │
+│  └─────────────────┘    └─────────────────┘    └─────────────────┘         │
+│                                                                             │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │                      AI Services Layer                              │    │
+│  ├─────────────────────────────────────────────────────────────────────┤    │
+│  │                                                                     │    │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐     │    │
+│  │  │   Claude        │  │   FLUX          │  │   Nemotron      │     │    │
+│  │  │   (Cost Est.)   │  │   (Rendering)    │  │   (Interpretation)│     │    │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘     │    │
+│  │                                                                     │    │
+│  │  Anthropic API       FAL.ai API         NVIDIA API                  │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
+### Workflow Flows
+
+#### Standard Flow (30-60 seconds)
+```
+User Specs → FLUX + Claude (Parallel) → Result Display
+               ↓
+         Permit Analysis
+```
+
+#### Interpretation Flow (85-100 seconds)
+```
+Vision Description → Nemotron → 3 Interpretations
+                       ↓
+                FLUX (3x Parallel) → Selection Grid
+                       ↓
+                User Selects → Claude + Permit → Final Result
+```
+
+### Service Details
+
+#### Cost Estimation (Claude)
 The Claude API analyzes building specifications and generates itemized construction costs considering:
 - Regional cost multipliers (San Francisco 1.4x, NYC 1.3x, Texas 0.8x, etc.)
 - Material quality adjustments (premium +25%, basic -15%)
 - Current 2024 construction market rates
 - Industry-standard cost breakdowns
 
-### Architectural Rendering
-
+#### Architectural Rendering (FLUX)
 FLUX generates photorealistic visualizations based on:
 - Building specifications and dimensions
 - Architectural style preferences
 - Professional architectural photography standards
 - Contextual urban settings
 
+#### Design Interpretation (Nemotron)
+NVIDIA Nemotron analyzes your vision description and generates 3 distinct architectural interpretations, each with:
+- Unique design approach
+- Material recommendations
+- Aesthetic characteristics
+- Visual representation
+
 ## Limitations & Disclaimers
 
 - Cost estimates are preliminary and for feasibility analysis only
-- Actual construction costs may vary by 20-40% based on:
-  - Market conditions
-  - Site-specific factors
-  - Final design specifications
-  - Contractor pricing
-  - Local regulations and permits
-
-## Future Improvements
-
-- [ ] PDF export with full report
-- [ ] Multiple architectural style variations
-- [ ] Interior renderings
-- [ ] User accounts and project history
-- [ ] Integration with real-time pricing APIs (RSMeans, Gordian)
-- [ ] Multiple viewing angles (front, side, aerial)
-- [ ] Mobile app
+- Actual construction costs may vary by 20-40% based on market conditions, site-specific factors, and final design specifications
+- Permit analysis is based on typical requirements and should be verified with local planning departments
 
 ## License
 
