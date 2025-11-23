@@ -9,6 +9,7 @@ export interface BuildingSpecs {
   location: string;
   materialQuality: MaterialQuality;
   stylePreference: StylePreference;
+  visionDescription?: string;
 }
 
 export interface CostBreakdown {
@@ -23,9 +24,17 @@ export interface CostBreakdown {
   timeline: string; // e.g., "12-16 months"
 }
 
+export interface Interpretation {
+  title: string;
+  approach: string;
+  materials: string;
+  aesthetic: string;
+}
+
 export interface GenerationResult {
   imageUrl: string;
   costs: CostBreakdown | null;
   specs: BuildingSpecs;
   timestamp: Date;
+  interpretation?: Interpretation;
 }

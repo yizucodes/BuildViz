@@ -4,9 +4,10 @@ import type { GenerationResult } from '../types';
 interface ResultDisplayProps {
   result: GenerationResult;
   onReset: () => void;
+  onViewOtherInterpretations?: () => void;
 }
 
-export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset }) => {
+export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset, onViewOtherInterpretations }) => {
   const resultRef = useRef<HTMLDivElement>(null);
 
   const formatCurrency = (amount: number): string => {
@@ -37,6 +38,13 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset })
         
         {/* Left: Rendering (70% width) */}
         <div className="lg:w-[70%]">
+          {result.interpretation && (
+            <div className="mb-3">
+              <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                Selected: {result.interpretation.title}
+              </span>
+            </div>
+          )}
           <img
             src={result.imageUrl}
             alt="Architectural rendering"
@@ -118,6 +126,14 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset })
 
       {/* Actions */}
       <div className="flex justify-center gap-4 mt-8">
+        {onViewOtherInterpretations && (
+          <button
+            onClick={onViewOtherInterpretations}
+            className="bg-purple-600 text-white py-3 px-8 rounded-md font-semibold hover:bg-purple-700 transition-colors"
+          >
+            View Other Interpretations
+          </button>
+        )}
         <button
           onClick={handleExport}
           className="bg-green-600 text-white py-3 px-8 rounded-md font-semibold hover:bg-green-700 transition-colors"
@@ -128,7 +144,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, onReset })
           onClick={onReset}
           className="bg-gray-600 text-white py-3 px-8 rounded-md font-semibold hover:bg-gray-700 transition-colors"
         >
-          Generate Another
+          Start Over
         </button>
       </div>
     </div>

@@ -14,6 +14,7 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
     location: 'San Francisco, CA',
     materialQuality: 'standard',
     stylePreference: 'modern-glass',
+    visionDescription: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -131,6 +132,29 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
           <option value="standard">Standard</option>
           <option value="premium">Premium (+25% cost)</option>
         </select>
+      </div>
+
+      {/* Vision Description */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Describe Your Vision (Optional)
+        </label>
+        <textarea
+          value={specs.visionDescription}
+          onChange={(e) => setSpecs({ ...specs, visionDescription: e.target.value })}
+          placeholder="Example: Modern office that feels welcoming, not cold"
+          rows={3}
+          maxLength={500}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 resize-none"
+        />
+        <div className="flex justify-between mt-1">
+          <p className="text-sm text-gray-500">
+            Get 3 AI interpretations of your description to pick from
+          </p>
+          <p className="text-xs text-gray-400">
+            {specs.visionDescription?.length || 0}/500
+          </p>
+        </div>
       </div>
 
       {/* Submit */}
